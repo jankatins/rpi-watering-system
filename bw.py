@@ -83,10 +83,10 @@ class WateringSystem(object):
             try:
                 import RPi.GPIO as GPIO
                 self._GPIO = GPIO
-                self._config["GPIO"] = "real"
+                self._GPIO_TYPE = "real"
             except ImportError:
-                self._config["GPIO"] = "fake"
                 self._GPIO = fakeGPIO()
+                self._GPIO_TYPE = "fake"
         else:
             self._GPIO = gpio
         
@@ -150,19 +150,14 @@ class WateringSystem(object):
 
 
 app = Flask(__name__)
-#app.config.update(
-#    DEBUG=True,   
-#)
 app.config.from_pyfile('application.cfg', silent=True)
-app.config.from_envvar('BALCONYWATERING_SETTINGS', silent=True)
-
-WATERING_OBJECTS = {"pump":{"mode": "out", "pin":22,"disable":True,"enable":False}}
+#app.config.from_envvar('BALCONYWATERING_SETTINGS', silent=True)
 
 _WS = None
 def get_ws():
     global _WS
     if _WS is None:
-        _WS = g._watering_system = WateringSystem(WATERING_OBJECTS)
+        _WS = g._watering_system = WateringSystem(app.config.get("WATERING_OBJECTS"))
     return _WS
 
 #@app.teardown_appcontext
@@ -204,4 +199,4 @@ def disable(ws_obj):
     
 if __name__ == "__main__":
     # import RPi.GPIO as GPIO
-    app.run()
+    app.run(host="0.0.0.0")
