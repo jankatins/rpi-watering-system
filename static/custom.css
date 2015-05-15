@@ -1,0 +1,61 @@
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+
+/** from http://isabelcastillo.com/error-info-messages-css **/
+.isa_message, .isa_success, .isa_warning, .isa_error {
+font-size: 90%;
+background-color: #33C3F0;
+color: #FFF;
+border: 1px solid #33C3F0;
+border-radius: 4px; 
+display: block;
+padding: 0.7rem 0.7rem;
+line-height: 1.0;
+margin-top: 1.0rem;
+margin-bottom: 2.7rem;
+}
+
+.isa_message {
+  color: #FFF;
+  background-color: #33C3F0;
+  border-color: #33C3F0; 
+}
+.isa_success {
+    color: #4F8A10;
+    background-color: #DFF2BF;
+}
+.isa_warning {
+    color: #9F6000;
+    background-color: #FEEFB3;
+}
+.isa_error {
+    color: #D8000C;
+    background-color: #FFBABA;
+}
+.isa_message i, .isa_success i, .isa_warning i, .isa_error i {
+    margin:10px 22px;
+    font-size:2em;
+    vertical-align:middle;
+}  
+
+.fa-message:before {
+  content: "\f05a";
+}
+
+.fa-success:before {
+  content: "\f00c";
+}
+.fa-warning:before {
+  content: "\f071";
+}
+.fa-error:before {
+  content: "\f057";
+}
+.fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translate(0, 0);
+}

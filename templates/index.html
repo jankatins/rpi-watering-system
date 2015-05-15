@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Balcony watering</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='normalize.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='skeleton.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='custom.css') }}">
+
+  <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– 
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  -->
+</head>
+<body>
+    
+  <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  
+  {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="container">
+    <div class="row">
+        {% for category, message in messages %}
+        <div class="isa_{{ category }}">
+            <i class="fa fa-{{ category }}"></i> {{ message }}
+        </div>
+        {% endfor %}       
+    </div>
+  </div>
+  {% endif %}
+  {% endwith %}
+
+  
+  <div class="container">
+    <div class="row">
+      <h4>Pump</h4>
+      <p> The pump is <strong>{{ 'enabled' if ws.pump.state else 'disabled' }} </strong></p>
+      <p class="section-description">Enabling and disabling the pump</p>
+      <a class="button button-primary" href="{{ url_for('enable', ws_obj='pump') }}">enable</a> <a class="button button-primary" href="{{ url_for('disable', ws_obj='pump') }}">disable</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <h4>Dump</h4>
+      <p> WS config: {{ ws._config }} </strong></p>
+      <p> GPIO state: {{ ws._GPIO.state }} </strong></p>
+    </div>
+  </div>
+
+  
+  <div class="container">
+    <div class="row">
+        <p>Made with <a href="http://www.getskeleton.com">Skeleton</a>.</p>
+    </div>
+  </div>
+
+<!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+</html>
