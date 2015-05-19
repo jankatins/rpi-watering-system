@@ -82,7 +82,10 @@ class WateringSystem(object):
             raise RuntimeError("Unknown object: {0}".format(name))
         cobj = self._config[name]
         GPIO_mode = gpios.OUT if cobj["mode"] == "out" else gpios.IN
-        gpios.export_pins(cobj["pin"])
+        try:
+            gpios.export_pins(cobj["pin"])
+        except RuntimeError as e:
+            logging.getLogger().info("Pin for %s (pin %s) was already exported. This might be a problem with other apps on your rpi!", name, cobj["pin"])
         gpios.setpindirection(cobj["pin"], GPIO_mode)
         if cobj["mode"] == "out":
             self.disable(name)
