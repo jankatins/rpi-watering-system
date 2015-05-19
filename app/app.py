@@ -25,6 +25,8 @@ SECRET_KEY = 'development key'
 # Create our little application :)
 app = Flask(__name__)
 app.config.from_object(__name__)
+app.config.from_pyfile('application.cfg', silent=True)
+
 
 # init folder structure
 if not os.path.exists(settings['datadir']):
@@ -36,7 +38,7 @@ app.register_blueprint(hardware, url_prefix='/control')
 
 @app.context_processor
 def inject_year():
-    # {{ year }} is now avaible in templates
+    # {{ year }} is now available in templates
     now = datetime.datetime.utcnow()
     return dict(year=now.strftime("%Y"))
 
@@ -109,8 +111,9 @@ def logout():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """Registers the user."""
-    # if g.user:
-        # return redirect(url_for('timeline'))
+    if not session.get('logged_in'):
+        flash('You need to log in to register new Users!', 'error')
+        return redirect(url_for('.login'))
     error = None
     if request.method == 'POST':
         if not request.form['username']:

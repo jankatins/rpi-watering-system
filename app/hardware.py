@@ -13,68 +13,53 @@ import os
 import subprocess
 from flask import Blueprint, Flask, request, session, g, redirect, url_for, abort, \
     render_template, flash, Markup, escape, send_from_directory
-from modio import Modio
-from gpios import *
+from settings import settings
+from wateringsystem import WateringSystem
+
 
 hardware = Blueprint('hardware', __name__)
 
-# init gpio's
-export_pins(23)
-setpindirection(23, "out")
-export_pins(24)
-setpindirection(24, "out")
+_WS = None
+def get_ws():
+    global _WS
+    if _WS is None:
+        _WS = g._watering_system = WateringSystem(settings["wateringsystem"])
+    return _WS
 
-mymodio = Modio()
+@hardware.route('/enable/<ws_obj>')
+def enable(ws_obj):
+    """Enable the watering object"""
+    if not session.get('logged_in'):
+        flash('You need to log in!', 'error')
+        return redirect(url_for('.control'))
+    try:
+        get_ws().enable(ws_obj)
+        flash("Enabled '{0}'".format(ws_obj))
+    except RuntimeError as e:
+        msg = 'Watering system: object "{0}" is not available or not changeable ({1})'
+        flash(msg.format(ws_obj, e))
+        hardware.logger.warning(msg, ws_obj, e)
+    return redirect(url_for('.control'))
 
-
+    
+@hardware.route('/disable/<ws_obj>')
+def disable(ws_obj):
+    """Enable the watering object"""
+    if not session.get('logged_in'):
+        flash('You need to log in!', 'error')
+        return redirect(url_for('.control'))
+    try:
+        get_ws().disable(ws_obj)
+        flash("Disabled '{0}'".format(ws_obj))
+    except RuntimeError as e:
+        msg = 'Watering system: object "{0}" is not available or not changeable ({1})'
+        flash(msg.format(ws_obj, e))
+        hardware.logger.warning(msg, ws_obj, e)
+    return redirect(url_for('.control'))  
+    
 @hardware.route('/')
 def control():
-    in_out = {'gpio23': bool(readpins(23)),
-              'gpio24': bool(readpins(24)),
-              'relay1': bool(mymodio.rel1),
-              'relay2': bool(mymodio.rel2)}
-    return render_template('control.j2', in_out=in_out)
-
-
-@hardware.route('/set_gpio', methods=('GET', 'POST',))
-def set_gpio():
-    if request.method == 'POST':
-        if not session.get('logged_in'):
-            flash('You need to log in!', 'error')
-            return redirect(url_for('.control'))
-        gpio23 = bool(request.form.get('gpio23'))
-        gpio24 = bool(request.form.get('gpio24'))
-        print("gpio23: ", gpio23)
-        print("gpio24: ", gpio24)
-        flash('GPIOs have been updated: GPIO23="' + str(gpio23)
-              + '", GPIO24="' + str(gpio24) + '"', 'success')
-        writepins(23, int(gpio23))
-        writepins(24, int(gpio24))
-    return redirect(url_for('.control'))
-
-
-@hardware.route('/modio', methods=('GET', 'POST',))
-def modio():
-    if request.method == 'POST':
-        if not session.get('logged_in'):
-            flash('You need to log in!', 'error')
-            return redirect(url_for('.control'))
-        relay1 = bool(request.form.get('relay1'))
-        relay2 = bool(request.form.get('relay2'))
-        print("relay1: ", relay1)
-        print("relay2: ", relay2)
-        flash('RELAYs have been updated: RELAY1="' + str(relay1)
-              + '", RELAY2="' + str(relay2) + '"', 'success')
-        if(relay1):
-            mymodio.relay1_on()
-        else:
-            mymodio.relay1_off()
-        if(relay2):
-            mymodio.relay2_on()
-        else:
-            mymodio.relay2_off()
-    return redirect(url_for('.control'))
-
+    return render_template('control.j2', ws=get_ws())
 
 @hardware.route('/webcam')
 def webcam():

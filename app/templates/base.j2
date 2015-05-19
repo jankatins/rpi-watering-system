@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Raspberry Pi MOD-IO Web{% endblock %}
+    <title>{% block title %}RPi watering system{% endblock %}
            {% block title_extra %} | Start{% endblock %}
     </title>
 
@@ -15,6 +15,7 @@
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='bootstrap/css/bootstrap-responsive.min.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/webcontrol.css') }}">
     <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/webcontrol-responsive.css') }}">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/custom.css') }}">
     {% endblock %}
 
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
@@ -37,12 +38,13 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="webcontrol-icon brand" href="/">Raspberry Pi MOD-IO Web</a>
+          <a class="webcontrol-icon brand" href="/">RPi watering system</a>
           <div class="nav-collapse">
             <ul class="nav">
               {% block navbar_links %}
                 {{render_mitem('show_start_page',  'Start', active=active_page)}}
                 {{render_mitem('hardware.control',  'Control', active=active_page)}}
+                {{render_mitem('hardware.webcam',  'Webcam', active=active_page)}}
                 {{render_mitem('show_about_page',  'About', active=active_page)}}
               {% endblock %}
             </ul>
@@ -51,8 +53,6 @@
             <li class="divider-vertical"></li>
             {# http://flask.pocoo.org/docs/api/#flask.session #}
             {% if not session.logged_in %}
-                <li><a href="{{ url_for('register') }}">Sign Up</a></li>
-                <li class="divider-vertical"></li>
                 <li><a href="{{ url_for('login') }}">Log In</a></li>
             {% else %}
 
@@ -61,8 +61,7 @@
                     Logged in as <b>{{ g.user['username'] }}</b> <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Settings</a></li>
-                        <li><a href="#">Account Details</a></li>
+                        <li><a href="{{ url_for('register') }}">Register User</a></li>
                         <li class="divider"></li>
                         <li><a href="{{ url_for('logout') }}">log out</a></li>
                     </ul>
@@ -77,19 +76,22 @@
     {% endblock %}
 
     <div class="container-fluid">
-    {% block content %}
-        <div class=page>
-        <h1>Messages</h1>
-
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }} fade in"> <a href="#" data-dismiss="alert" class="close">×</a> {{ message }} </div>
-            {% endfor %}
-            {% endif %}
-        {% endwith %}
-
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="top-spacer-auto"></div>
+        <div class="container">
+        {% for category, message in messages %}
+            <div class="alert alert-{{ category }} fade in"> <a href="#" data-dismiss="alert" class="close">×</a> <i class="fa x-{{ category }}"></i> {{ message }} </div>
+        {% endfor %}
         </div>
+        {% else %}
+        <div class="top-spacer-auto"></div>        
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}
+
+
     {% endblock %}
 
     </div><!--/.fluid-container-->
@@ -98,7 +100,7 @@
 
     {% block footer %}  
         <footer class="container-fluid footer">
-            <hr> <p> &copy; Copyright {{ year }} by <a href="http://www.jann.cc">Christian Jann</a>.
+            <hr> <p> &copy; Copyright {{ year }} by Jan Schulz. Licensed under <a href="http://www.gnu.org/licenses/agpl-3.0.en.html">GNU AGPL v3</a>.
                 <a  class="pull-right" href="#">Back to top</a> </p>
         </footer>
     {% endblock %}

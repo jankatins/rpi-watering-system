@@ -12,7 +12,7 @@
 {% endmacro %}
 
 {% macro render_mitem(endpoint, caption, active='') %}
-<li {% if request.endpoint == endpoint or active == endpoint %} class='active' {% endif %}>
+<li {% if request.endpoint == endpoint %} class='active' {% endif %}>
     <a href="{{url_for(endpoint)}}">{{ caption }}</a>
 </li>
 {% endmacro %}

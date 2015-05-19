@@ -6,48 +6,18 @@
 
 {% block content %}
 <div class="container">
-
   <header class="jumbotron masthead">
     <div class="inner">
-      <h1>Raspberry Pi MOD-IO Web</h1>
-      <p>The next generation home automation.</p>
-      <p class="download-info">
-        <a href="{{ url_for('hardware.control') }}" class="btn btn-primary btn-large">Try It</a>
-        <a href="https://github.com/christianjann/raspberrypi-modio-web" class="btn btn-large">Get the Code</a>
+      <h1>RPi watering system</h1>
+      <p>Automate your balcony -- watering flower boxes at the push of a button.</p>
+      <p>        
+        <a href="{{ url_for('hardware.control') }}" class="btn btn-primary btn-large">Press the Buttons</a>
+        <a href="{{ url_for('hardware.webcam') }}" class="btn btn-primary btn-large">Look at the Flowers</a>
       </p>
     </div>
-
-    <ul class="quick-links">
-      <li><a href="https://github.com/christianjann/raspberrypi-modio-web/wiki/Start">Wiki</a></li>
-      <li><a href="https://github.com/christianjann/raspberrypi-modio-web/issues?state=open">Issues</a></li>
-      <li><a href="https://github.com/christianjann/raspberrypi-modio-web/wiki/Roadmap">Roadmap</a></li>
-      <li><a href="https://github.com/christianjann/raspberrypi-modio-web/wiki/Changelog">Changelog</a></li>
-    </ul>
   </header>
 
   <hr class="soften">
-
-  <div class="marketing">
-    <h1>Home automation for everyone, everywhere.</h1>
-    <p class="marketing-byline">Here are some pictures of the hardware, for an deeper insight take a look at <a href="http://www.jann.cc/2013/01/21/control_your_light_at_home_with_a_raspberry_pi.html" target="_blank">my blog post</a>.</p>
-    <ul class="example-sites thumbnails">
-      <li class="span4">
-        <a class="thumbnail" href="/static/img/hardware.jpeg" target="_blank">
-          <img src="/static/img/hardware.jpeg" alt="Screenshot Raspberry Pi MOD-IO Web">
-        </a>
-      </li>
-      <li class="span4">
-        <a class="thumbnail" href="/static/img/hardware.jpeg" target="_blank">
-          <img src="/static/img/hardware.jpeg" alt="Screenshot Raspberry Pi MOD-IO Web">
-        </a>
-      </li>
-      <li class="span4">
-        <a class="thumbnail" href="/static/img/hardware.jpeg" target="_blank">
-          <img src="/static/img/hardware.jpeg" alt="Screenshot Raspberry Pi MOD-IO Web">
-        </a>
-      </li>
-    </ul>
-  </div><!-- /.marketing -->
 
 </div> <!--container-->
 {% endblock %}  

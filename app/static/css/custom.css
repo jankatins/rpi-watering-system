@@ -1,0 +1,16 @@
+@import url('//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css');
+ 
+
+.x-message:before {
+  content: "\f05a";
+}
+
+.x-success:before {
+  content: "\f00c";
+}
+.x-warning:before {
+  content: "\f071";
+}
+.x-error:before {
+  content: "\f057";
+}

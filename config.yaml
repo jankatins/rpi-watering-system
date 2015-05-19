@@ -2,3 +2,5 @@
 debug: True
 datadir: data/ 
 maxusers: 20
+
+wateringsystem: {pump: {mode: out, pin: 22, disable: True, enable: False, name: Pump}}
