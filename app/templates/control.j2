@@ -6,10 +6,19 @@
 
 {% block content %}
 <div class="container">
-  <div class="row-fluid">           
+  <div class="row-fluid">
       <h2>Objects</h2>
+
+      <h4>Water Sensor</h4>
+      <p> The water sensor (which acts as a failsave for the pump) is <strong>{{ 'enabled' if ws.watersensor.state else 'disabled' }}</strong>.</p>
+      <p class="section-description">Enabling and disabling the water sensor</p>
+      <p>
+         <a class="btn btn-large btn-primary" href="{{ url_for('hardware.enable', ws_obj='watersensor') }}">enable</a>
+         <a class="btn btn-large btn-primary" href="{{ url_for('hardware.disable', ws_obj='watersensor') }}">disable</a>
+      </p>
+
       <h4>Pump</h4>
-      <p> The pump is <strong>{{ 'enabled' if ws.pump.state else 'disabled' }} </strong></p>
+      <p> The pump is <strong>{{ 'enabled' if ws.pump.state else 'disabled' }}</strong>. The pump only works when the water sensor is enabled.</p>
       <p class="section-description">Enabling and disabling the pump</p>
       <p>
          <a class="btn btn-large btn-primary" href="{{ url_for('hardware.enable', ws_obj='pump') }}">enable</a> 

@@ -1,6 +1,17 @@
-
-debug: True
-datadir: data/ 
+--- 
+datadir: data/
+debug: true
 maxusers: 20
-
-wateringsystem: {pump: {mode: out, pin: 22, disable: True, enable: False, name: Pump}}
+wateringsystem: 
+  pump: 
+    disable: true
+    enable: false
+    mode: out
+    name: Pump
+    pin: 18
+  watersensor: 
+    disable: true
+    enable: false
+    mode: out
+    name: "Water Sensor"
+    pin: 17
