@@ -1,0 +1,7 @@
+[Unit]
+Description=Run hourly wifi check
+
+[Service]
+Type=simple
+ExecStart=/srv/rpi-watering-system/checkwifi.sh
+

@@ -1,0 +1,16 @@
+[Unit]
+Description=rpi watering system
+After=syslog.target
+
+[Service]
+Type=simple
+User=ws
+Group=ws
+WorkingDirectory=/srv/rpi-watering-system
+ExecStart=/srv/rpi-watering-system/run.py
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
+

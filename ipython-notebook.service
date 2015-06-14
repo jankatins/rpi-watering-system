@@ -1,0 +1,17 @@
+[Unit]
+Description=IPython notebook
+After=syslog.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/srv/rpi-watering-system
+ExecStart=/usr/bin/ipython notebook --ip=*
+StandardOutput=syslog
+StandardError=syslog
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+
