@@ -45,6 +45,7 @@
                 {{render_mitem('show_start_page',  'Start', active=active_page)}}
                 {{render_mitem('hardware.control',  'Control', active=active_page)}}
                 {{render_mitem('hardware.webcam',  'Webcam', active=active_page)}}
+                {{render_mitem('show_charts_page',  'Charts', active=active_page)}}
                 {{render_mitem('show_about_page',  'About', active=active_page)}}
               {% endblock %}
             </ul>
@@ -108,9 +109,8 @@
     {% endblock %} {# body #}
 
     {% block bodyjs %}
-    <!-- Le javascript ============================================ -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{ url_for('static', filename='js/jquery-1.8.3.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-1.11.1.min.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.min.js') }}"></script>
     {% endblock %}
 

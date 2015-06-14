@@ -15,12 +15,25 @@
 <div class="container">
   <div class="inner">
         <a href="{{ url_for('hardware.camimage') }}">
-          <img class="thumbnail" style="max-width:95%;" alt="webcam image" src="{{ url_for('hardware.camimage') }}">
+          <img class="thumbnail" id="webcam_img" style="max-width:95%;" alt="webcam image" src="{{ url_for('hardware.camimage') }}">
         </a>
-        Reload the page to see the next image.
+        <p>Last updated: <span id="lastUpdated">{{ last_updated }}</span><p>
+        <p><button type="button" class="btn btn-primary active" onclick="reload()">Reload Image</button></p>
   </div><!--/inner-->
 </div>
 {% endblock %}
 
 {% block extrabodyjs %}
+<script>
+reload = function(){
+d = new Date();
+$("#webcam_img").prop("src", "{{ url_for('hardware.camimage') }}?reload=" + d.valueOf());
+var options = { weekday: 'short', 
+                year: 'numeric', month: 'long', day: '2-digit', 
+                hour:'2-digit', minute:'2-digit', minute:'2-digit' };
+sd = d.toLocaleString();
+$("#lastUpdated").html(sd);
+}
+//reload()
+</script>
 {% endblock %}

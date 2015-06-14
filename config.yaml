@@ -7,8 +7,9 @@ wateringsystem:
     disable: true
     enable: false
     mode: out
-    name: Pump
+    name: "Pump"
     pin: 18
+    depends: "watersensor"
   watersensor: 
     disable: true
     enable: false

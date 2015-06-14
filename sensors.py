@@ -53,6 +53,15 @@ def count_volume(pin):
         GPIO.wait_for_edge(pin, GPIO.FALLING)
 
 thread.start_new_thread( count_volume, (volume_pin,))
+
+
+moisture_cache = {}
+for ch, name in moisture_channels:
+    moisture_cache[name] = [] 
+
+moisture_interval = 10
+cur_moisture_interval = 0
+
     
 while True:
     if enable_volume:
@@ -61,13 +70,26 @@ while True:
         db.session.commit()
         #print("Volume: added: %s (all: %s)" % (counter-old_counter, counter))
         old_counter = counter
+
     if enable_moisture:
+        cur_moisture_interval += 1
+
+        # read in every minute, but only into a cache
         for channel, name in moisture_channels:
             value = read_channel(channel)
-            sr = SensorReadings(source=name, value=value)
-            db.session.add(sr)
+            moisture_cache[name].append(value)
+
+        # only submit a moving avarage every Xmin
+        # -> don't overfill the db... 
+        if cur_moisture_interval > moisture_interval:
+            for channel, name in moisture_channels:
+                vals =  moisture_cache[name]
+                moisture_cache[name] = []
+                value = int(sum(vals)/len(vals))
+                sr = SensorReadings(source=name, value=value)
+                db.session.add(sr)
             db.session.commit()
+            cur_moisture_interval = 0
             #print("%s: added: %s" % (name, value))
-            old_counter = counter
     time.sleep(60)
 

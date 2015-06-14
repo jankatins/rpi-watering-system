@@ -1,5 +1,6 @@
 import gpios
 import logging
+from datetime import datetime
 
 class WateringSystemObject(object):
     """thin wrapper to access the object"""
@@ -30,6 +31,7 @@ class WateringSystem(object):
 
     def __init__(self, config, gpio=None):
         self._config = config
+        self._state = {}
         self.inputs = []
         self.outputs = []
         self.log = []
@@ -69,13 +71,33 @@ class WateringSystem(object):
         if not cobj["mode"] == "out":
             raise RuntimeError("Wrong mode for object: {0}".format(name))
         gpios.writepin(cobj["pin"], cobj[state])
+        if not self._state.get(name) or self._state[name]['state'] != state:
+                self._state[name] = {'state': state, 'last_changed':datetime.utcnow()}
         logging.getLogger().debug("changed state for %s (pin %s): %s", name, cobj["pin"], state)
     
-    def enable(self, name):
+    def enable(self, name, stack = None):
+        if stack and name in stack:
+             logging.getLogger().error("Cycle detected while enabling '%s': %s", name, stack)
+        depends = self._config[name].get("depends", None)
+        if depends:
+             if stack:
+                  stack.append(name)
+             else:
+                  stack = [name]
+             self.enable(depends, stack=[name])
         self.set_state(name, "enable")
     
-    def disable(self, name):
+    def disable(self, name, stack=None):
+        if stack and name in stack:
+             logging.getLogger().error("Cycle detected while enabling '%s': %s", name, stack)
         self.set_state(name, "disable")
+        depends = self._config[name].get("depends", None)
+        if depends:
+             if stack:
+                  stack.append(name)
+             else:
+                  stack = [name]
+             self.disable(depends, stack=[name])
     
     def setup(self, name):
         if not name in self._config:

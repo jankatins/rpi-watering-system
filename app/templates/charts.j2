@@ -1,0 +1,66 @@
+{% extends "base.j2" %}
+
+{% from "macros.j2" import check_box %}
+
+{% block title_extra %} | Charts{% endblock %}
+
+
+{% block head_extra %} 
+    <link href='{{ url_for('static', filename='mg/metricsgraphics.css') }}' rel='stylesheet' type='text/css'>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js' charset='utf-8'></script>
+    <script src='{{ url_for('static', filename='mg/metricsgraphics.js') }}'></script>
+{% endblock %}
+
+{% block content %} <div class="container">
+  <div class="row-fluid">
+      <h2>Charts</h2>
+
+      <h4>Moisture Sensor</h4>
+      <p>The sensor readings</p>
+      <div class='center-block' id='moisture'></div>
+      <div class='center-block legend'></div>
+  </div><!--/row-->
+
+</div><!--/container-->
+ <script>
+        d3.json('/sensor_readings.json', function(data) {
+            data = data.data;
+            var keys = [];
+            var data2 = [];
+            var water;
+            for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                    var conv = MG.convert.date(data[key], 'creation_date', '%Y-%m-%dT%H:%M:%S%Z');
+                    if (key == "water"){
+                       water = conv;
+                    } else {
+                       data2.push(conv);
+                       keys.push(key);
+                    }
+                }
+            }
+            var marker =[];
+            for (var i = 0; i < water.length; i++) {
+               var cur = water[i];
+               marker.push({'creation_date': cur.creation_date,
+                            'label':cur.value});
+            }
+            MG.data_graphic({
+                data: data2,
+                width: 650,
+                height: 150,
+                target: '#moisture',
+                x_accessor: 'creation_date',
+                y_accessor: 'value',
+                legend: keys,
+                markers: marker,
+                legend_target: '.legend'
+            })
+        })
+    </script>
+
+{% endblock %}
+
+{% block extrabodyjs %}
+{% endblock %}

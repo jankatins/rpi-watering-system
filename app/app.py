@@ -13,11 +13,13 @@ import datetime
 import os
 import shutil
 from flask import Flask, request, session, g, redirect, url_for, abort, \
-    render_template, flash, Markup, escape, send_from_directory
+    render_template, flash, Markup, escape, send_from_directory, jsonify
 from werkzeug import check_password_hash
 from settings import settings
 from users import add_user, get_user
 from hardware import hardware
+
+from models import SensorReadings, db
 
 # configuration
 SECRET_KEY = 'development key'
@@ -134,3 +136,37 @@ def register():
                 'You were successfully registered and can login now', 'success')
             return redirect(url_for('login'))
     return render_template('register.j2', error=error)
+
+
+
+@app.route('/charts')
+def show_charts_page():
+    return render_template('charts.j2')
+
+
+#get sensor readings is used via an ajax call with d3.js, to render the graph
+@app.route('/sensor_readings.json', methods=['GET'])
+def get_sensor_readings():
+    import datetime
+    import json
+    
+    try:
+       days = request.args.get("days",3)
+       days = int(days)
+    except Exception as e:
+       app.logger.warning('sensor_readings.json called with wrong parameter: days=%s (%s)', days, e)
+       days = 3
+    current_time = datetime.datetime.utcnow()
+    time_ago = current_time - datetime.timedelta(days=days)
+    results = {}
+    for s in ["tomatos", "front"]:
+        sr = SensorReadings.query.filter(
+                          SensorReadings.creation_date > time_ago,
+                          SensorReadings.source == s).all()
+        results[s] = [i.serialize for i in sr]
+    water = SensorReadings.query.filter(
+                          SensorReadings.creation_date > time_ago,
+                          SensorReadings.source == "watersensor_runtime").all()
+    results["water"] = [i.serialize for i in water]
+    return jsonify(data=results)
+
