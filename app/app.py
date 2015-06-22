@@ -166,7 +166,7 @@ def get_sensor_readings():
         results[s] = [i.serialize for i in sr]
     water = SensorReadings.query.filter(
                           SensorReadings.creation_date > time_ago,
-                          SensorReadings.source == "watersensor_runtime").all()
+                          SensorReadings.source == "pump_runtime").all()
     results["water"] = [i.serialize for i in water]
     return jsonify(data=results)
 
